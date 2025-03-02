@@ -31,6 +31,7 @@ pipeline {
             }
         }
         stage('Create EXE') {
+            agent { label 'win' }
             steps {
                 sh './gradlew jar' // Ensure JAR is built
                 sh "jpackage --type exe --name forrealdatingapp-${VERSION} --input build/libs/ --main-jar app.jar --dest build/exe"
