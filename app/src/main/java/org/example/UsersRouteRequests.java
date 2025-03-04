@@ -34,7 +34,7 @@ public class UsersRouteRequests {
        String json = objectMapper.writeValueAsString(user);
      * 
      */
-    private static final Dotenv env = Dotenv.load();
+    public static final Dotenv env = Dotenv.load();
     private static final String HOST = env.get("HOST");
     private static final ObjectMapper om = new ObjectMapper();
     public static final TokenManager tm = new TokenManager();
