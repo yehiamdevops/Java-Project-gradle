@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent win                                                                                                                                                                                                                                                                                                                                                                                           
     environment {
         GITHUB_TOKEN = credentials('GITHUB_TOKEN')
         VERSION = "v1.0.${BUILD_NUMBER}" // Generates v1.0.1, v1.0.2, etc.
@@ -40,10 +40,10 @@ pipeline {
                     def repo = "yehiamdevops/Java-Project-gradle"
 
                     // Ensure GitHub CLI is authenticated
-                    sh 'echo $GITHUB_TOKEN | gh auth login --with-token'
+                    bat 'echo $GITHUB_TOKEN | gh auth login --with-token'
 
                     // Create a new GitHub release
-                    sh "gh release create ${version} app/build/libs/app.jar --repo ${repo} --title 'Release ${version}' --notes 'Automated release from Jenkins'"
+                    bat "gh release create ${version} app/build/libs/app.jar --repo ${repo} --title 'Release ${version}' --notes 'Automated release from Jenkins'"
                 }
             }
         }
