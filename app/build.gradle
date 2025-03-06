@@ -1,29 +1,19 @@
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-    }
-    dependencies {
-        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
-    }
-}
+
 
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
-    id "groovy"
-    id "java"
     id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
-group 'org.example'
-version '0.1'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
+    implementation 'org.openjfx:javafx-controls:23.0.2'
+    implementation 'org.openjfx:javafx-swing:23.0.2'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
     implementation 'com.fasterxml.jackson.core:jackson-core:2.18.3'
     implementation 'com.fasterxml.jackson.core:jackson-annotations:2.18.3'
@@ -32,19 +22,20 @@ dependencies {
 }
 
 java {
-    modularity.inferModulePath = true
+    
     toolchain {
         languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 application {
+    // Define the main class for the application.
     mainClass = 'org.example.App'
-    applicationDefaultJvmArgs = [
-        '--add-modules', 'javafx.controls,javafx.swing',
-        '-Djavafx.verbose=true',
-        '-Dprism.verbose=true'
-    ]
+}
+jar {
+    manifest {
+        attributes 'Main-Class': application.mainClass
+    }
 }
 
 javafx {
@@ -52,29 +43,8 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.swing']
 }
 
-// Task to create the fat jar (bundling all dependencies)
-task customFatJar(type: Jar) {
-    archiveBaseName = 'all-in-one-jar'
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    manifest {
-        attributes 'Main-Class': 'org.example.App'
-    }
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    with jar
-}
 
-// jpackage task to package the application
-task jpackageApp(type: Exec) {
-    dependsOn customFatJar // Ensure the fat jar is built before packaging
 
-    def modulePath = "javafx-sdk-23.0.2/lib"
-
-    commandLine 'jpackage', '--name', 'forrealdatingapp',
-                '--input', 'build/libs',
-                '--main-jar', "all-in-one-jar-0.1.jar",  // Reference the fat jar
-                '--java-options', "--add-modules javafx.controls,javafx.swing",
-                '--module-path', modulePath
-}
 
 tasks.named('test') {
     useJUnitPlatform()
