@@ -100,7 +100,7 @@ public class ChatZone {
             try {
                 if (socket == null ||socket.isClosed()) {
                     
-                    socket = new Socket(UsersRouteRequests.env.get("SOCK"), 4000); // Replace with actual server details
+                    socket = new Socket(UsersRouteRequests.env.get("SOCK"),Integer.parseInt(UsersRouteRequests.env.get("SOCK_PORT")) ); // Replace with actual server details
                     reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                     writer = new PrintWriter(socket.getOutputStream(), true);
                     
