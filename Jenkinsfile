@@ -30,13 +30,7 @@ pipeline {
                 sh './gradlew jar'
             }
         }
-        stage('Create EXE') {
-            agent { label 'win' }
-            steps {
-                sh './gradlew jar' // Ensure JAR is built
-                sh "jpackage --type exe --name forrealdatingapp-${VERSION} --input build/libs/ --main-jar app.jar --dest build/exe"
-            }
-        }
+ 
 
 
         stage('Publish to GitHub Release') {
@@ -49,7 +43,7 @@ pipeline {
                     sh 'echo $GITHUB_TOKEN | gh auth login --with-token'
 
                     // Create a new GitHub release
-                    sh "gh release create ${version} build/exe/forrealdatingapp-${VERSION}.exe --repo ${repo} --title 'Release ${version}' --notes 'Automated release from Jenkins'"
+                    sh "gh release create ${version} app/build/libs/app.jar --repo ${repo} --title 'Release ${version}' --notes 'Automated release from Jenkins'"
                 }
             }
         }
